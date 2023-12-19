@@ -1,0 +1,12 @@
+Lab 4
+Ivan Pivovarov
+from KM-23
+
+Python Pygame:
+	Pygame я вчив ще коли ходив до школи. Колись робив схожий проект з 3д кубом.
+Math:
+	https://www.algorithm-archive.org/contents/affine_transformations/affine_transformations.html
+	https://youtu.be/E3Phj6J287o?si=761bifyomwI6io06
+Python Pillow:
+	https://pythonexamples.org/python-pillow-create-image/
+
