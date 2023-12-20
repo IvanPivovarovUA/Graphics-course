@@ -4,9 +4,17 @@ from KM-23
 
 Python Pygame:
 	Pygame я вчив ще коли ходив до школи. Колись робив схожий проект з 3д кубом.
+	https://www.pygame.org/docs
+
+Python Tkinter:
+	https://tk-tutorial.readthedocs.io/_/downloads/en/latest/pdf/
+
 Math:
 	https://www.algorithm-archive.org/contents/affine_transformations/affine_transformations.html
 	https://youtu.be/E3Phj6J287o?si=761bifyomwI6io06
 Python Pillow:
 	https://pythonexamples.org/python-pillow-create-image/
 
+Асинхронность:
+	https://www.geeksforgeeks.org/multithreading-python-set-1/
+	
