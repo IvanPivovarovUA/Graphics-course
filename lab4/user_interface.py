@@ -2,7 +2,7 @@ def start_interface(cube_state):
     import tkinter as tk
     root = tk.Tk()
 
-    texts = ['X Y', 'X Y', 'Y Z']
+    texts = ['X Y', 'X Z', 'Y Z']
     vars = [tk.StringVar(value='1'), tk.StringVar(value='0'), tk.StringVar(value='0')]
     def cb():
         print('--- languages ---')
