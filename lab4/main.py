@@ -4,7 +4,7 @@ import math
 import pygame, sys, math
 pygame.init()
 size = 600
-screen = pygame.display.set_mode((size+500,size))
+screen = pygame.display.set_mode((size,size))
 clock = pygame.time.Clock()
 
 BLACK =(0,0,0)
@@ -18,13 +18,14 @@ BLUE = (0,0,255)
 Xp =  (D * X) / Z
 Yp =  (D * Y) / Z
 """
+REAL_DISTANCE = 6000
 
-DISTANCE = 100
 
-DEFAULT = 100
+DEFAULT = 1000
 CUB_SIZE = DEFAULT + 30
-Z = 100;
+Z = 1000
 
+DISTANCE = 600
 points = [
     # [DEFAULT,DEFAULT,DEFAULT],
     # [CUB_SIZE,DEFAULT,DEFAULT],
@@ -48,47 +49,66 @@ points = [
 
 ]
 
-for x in range(int(DEFAULT/1)):
-    points.append([x*1,DEFAULT,Z])
-    points.append([-x*1,DEFAULT,Z])
 
-    points.append([x*1,-DEFAULT,Z])
-    points.append([-x*1,-DEFAULT,Z])
+for x in range(int(DEFAULT/100)):
+    for y in range(int(DEFAULT/100)):
+        points.append([x*100,y*100,Z])
+        points.append([-x*100,y*100,Z])
+
+        points.append([x*100,-y*100,Z])
+        points.append([-x*100,-y*100,Z])
+
+###############################################
+
+        points.append([x*100,y*100,-Z])
+        points.append([-x*100,y*100,-Z])
+
+        points.append([x*100,-y*100,-Z])
+        points.append([-x*100,-y*100,-Z])
+
+
+
+# for x in range(int(DEFAULT/10)):
+#     points.append([x*10,DEFAULT,Z])
+#     points.append([-x*10,DEFAULT,Z])
+
+#     points.append([x*10,-DEFAULT,Z])
+#     points.append([-x*10,-DEFAULT,Z])
     
 
-    points.append([x*1,DEFAULT,-Z])
-    points.append([-x*1,DEFAULT,-Z])
+#     points.append([x*10,DEFAULT,-Z])
+#     points.append([-x*10,DEFAULT,-Z])
 
-    points.append([x*1,-DEFAULT,-Z])
-    points.append([-x*1,-DEFAULT,-Z])
+#     points.append([x*10,-DEFAULT,-Z])
+#     points.append([-x*10,-DEFAULT,-Z])
 
-    ########################
-    points.append([DEFAULT,DEFAULT,x*1])
-    points.append([DEFAULT,DEFAULT,-x*1])
+#     ########################
+#     points.append([DEFAULT,DEFAULT,x*10])
+#     points.append([DEFAULT,DEFAULT,-x*10])
 
-    points.append([DEFAULT,-DEFAULT,x*1])
-    points.append([DEFAULT,-DEFAULT,-x*1])
+#     points.append([DEFAULT,-DEFAULT,x*10])
+#     points.append([DEFAULT,-DEFAULT,-x*10])
 
-    points.append([-DEFAULT,DEFAULT,x*1])
-    points.append([-DEFAULT,DEFAULT,-x*1])
+#     points.append([-DEFAULT,DEFAULT,x*10])
+#     points.append([-DEFAULT,DEFAULT,-x*10])
 
-    points.append([-DEFAULT,-DEFAULT,x*1])
-    points.append([-DEFAULT,-DEFAULT,-x*1])
+#     points.append([-DEFAULT,-DEFAULT,x*10])
+#     points.append([-DEFAULT,-DEFAULT,-x*10])
     
 
 
-for x in range(int(DEFAULT/1)):
-    points.append([DEFAULT,x*1,Z])
-    points.append([DEFAULT,-x*1,Z])
+# for x in range(int(DEFAULT/10)):
+#     points.append([DEFAULT,x*10,Z])
+#     points.append([DEFAULT,-x*10,Z])
 
-    points.append([-DEFAULT,x*1,Z])
-    points.append([-DEFAULT,-x*1,Z])
+#     points.append([-DEFAULT,x*10,Z])
+#     points.append([-DEFAULT,-x*10,Z])
 
-    points.append([DEFAULT,x*1,-Z])
-    points.append([DEFAULT,-x*1,-Z])
+#     points.append([DEFAULT,x*10,-Z])
+#     points.append([DEFAULT,-x*10,-Z])
 
-    points.append([-DEFAULT,x*1,-Z])
-    points.append([-DEFAULT,-x*1,-Z])
+#     points.append([-DEFAULT,x*10,-Z])
+#     points.append([-DEFAULT,-x*10,-Z])
 
 
 
@@ -119,7 +139,18 @@ def rotate2(angle, point):
     C = np.matmul(A,B)
     return [point[0],C[0][0], C[1][0]]
 
-# points[0] = rotate2(0.5,points[0])
+def rotate3(angle, point):
+    A = [
+        [math.cos(angle), -math.sin(angle)],
+        [math.sin(angle),  math.cos(angle)]
+    ]
+    B = [
+        [point[0]],
+        [point[2]]
+    ]
+
+    C = np.matmul(A,B)
+    return [C[0][0], point[1], C[1][0]]
 
 a = 0
 i = True
@@ -129,21 +160,22 @@ while 1:
     screen.fill(BLACK)
     
     #Set and print FPS
-    clock.tick(6)
-    # print(
-        # clock.get_fps()
-    # )
+    clock.tick(60)
+    print(
+        clock.get_fps()
+    )
     a+=0.1
     # points[0] = rotate2(a,points[0])
     if i: 
         Color = GREEN
 
         for p in points:
-            # p = rotate1(a,p)
-            p = rotate2(a,p)
+            p = rotate3(a,p)
+            # p = rotate2(math.pi/4,p)
+            # p = rotate2(a,p)
 
-            fake_Z = p[2] + Z + Z
-
+            fake_Z = p[2] + Z + 600
+            fake_Z += REAL_DISTANCE
 
             pos = (
                 DISTANCE * p[0] / fake_Z,
@@ -152,9 +184,9 @@ while 1:
 
             # pos = (
             #     p[0],
-            #     p[1],
+            #     p[1]
             # )
-            # print(pos[0]+ 300,pos[1]);
+
             pygame.draw.circle(screen, Color, (pos[0]+ 300,pos[1] + 300),1)
         # i = False
 

@@ -1,109 +1,83 @@
-import numpy as np
-import math
-
-import pygame, sys, math
+import pygame
+from pygame.locals import *
+from math import *
 pygame.init()
-size = 600
-screen = pygame.display.set_mode((size+500,size))
+
+# Определение цветов
+BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
+RED = (255, 0, 0)
+GREEN = (0, 255, 0)
+BLUE = (0, 0, 255)
+
+# Инициализация экрана
+width, height = 800, 600
+screen = pygame.display.set_mode((width, height))
+pygame.display.set_caption("3D Cube")
+
 clock = pygame.time.Clock()
 
-BLACK =(0,0,0)
-WHITE =(255,255,255)
-RED = (255,0,0)
-GREEN = (0,255,0)
-BLUE = (0,0,255)
-
-
-"""
-Xp =  (D * X) / Z
-Yp =  (D * Y) / Z
-"""
-
-DISTANCE = 1
-
-DEFAULT = 100
-CUB_SIZE = DEFAULT + 30
-
-Z = 2;
-
-points = [
-    [DEFAULT,DEFAULT,DEFAULT],
-    [CUB_SIZE,DEFAULT,DEFAULT],
-    [DEFAULT,CUB_SIZE,DEFAULT],
-    [DEFAULT,DEFAULT,CUB_SIZE],
-
-    [CUB_SIZE,CUB_SIZE,DEFAULT],
-    [CUB_SIZE,CUB_SIZE,CUB_SIZE],
-    [DEFAULT,CUB_SIZE,CUB_SIZE],
-    [CUB_SIZE,DEFAULT,CUB_SIZE]
-
-    # [DEFAULT,DEFAULT,Z],
-    # [-DEFAULT,-DEFAULT,Z],
-    # [-DEFAULT,DEFAULT,Z],
-    # [DEFAULT,-DEFAULT,Z],
-
-    # [DEFAULT,DEFAULT,Z+2],
-    # [-DEFAULT,-DEFAULT,Z+2],
-    # [-DEFAULT,DEFAULT,Z+2],
-    # [DEFAULT,-DEFAULT,Z+2]
-
+# Определение вершин куба
+vertices = [
+    [-1, -1, -1],
+    [-1, 1, -1],
+    [1, 1, -1],
+    [1, -1, -1],
+    [-1, -1, 1],
+    [-1, 1, 1],
+    [1, 1, 1],
+    [1, -1, 1]
 ]
 
+# Определение граней куба
+edges = [
+    (0, 1), (1, 2), (2, 3), (3, 0),
+    (4, 5), (5, 6), (6, 7), (7, 4),
+    (0, 4), (1, 5), (2, 6), (3, 7)
+]
 
+# Определение центра экрана
+cx, cy = width // 2, height // 2
 
-def rotate(angle, point):
-    A = [
-        [math.cos(angle), -math.sin(angle)],
-        [math.sin(angle),  math.cos(angle)]
-    ]
-    B = [
-        [point[0]],
-        [point[1]]
-    ]
+# Определение угла поворота куба
+angle = 0
 
-    C = np.matmul(A,B)
-    return (C[0][0], C[1][0], point[2])
-
-    # B = [
-    #     [point[1]],
-    #     [point[2]]
-    # ]
-
-    # C = np.matmul(A,B)
-    # return (point[0],C[0][0], C[1][0])
-
-
-a = 0
-i = True
-while 1:
+running = True
+while running:
     for event in pygame.event.get():
-        if event.type == pygame.QUIT: sys.exit()
+        if event.type == QUIT:
+            running = False
+
     screen.fill(BLACK)
-    
-    #Set and print FPS
-    clock.tick(6)
-    # print(
-        # clock.get_fps()
-    # )
-    a+=0.1;
 
-    if i: 
-        Color = GREEN
-        for p in points:
-            p = rotate(a,p)
+    # Поворот куба
+    angle += 0.01
+    rotation_matrix_y = [
+        [cos(angle), 0, -sin(angle)],
+        [0, 1, 0],
+        [sin(angle), 0, cos(angle)]
+    ]
 
-            # pos = (
-            #     DISTANCE * p[0] / p[2],
-            #     DISTANCE * p[1] / p[2],
-            # )
+    rotated_vertices = []
+    for vertex in vertices:
+        result = [0, 0, 0]
+        for i in range(3):
+            for j in range(3):
+                result[i] += vertex[j] * rotation_matrix_y[j][i]
+        rotated_vertices.append(result)
 
-            pos = (
-                p[0],
-                p[1],
-            )
-            print(pos[0]+ 300,pos[1]);
-            pygame.draw.circle(screen, Color, (pos[0]+200,pos[1]+200),2)
-        # i = False
-        pygame.display.flip()
+    # Преобразование 3D координат в 2D
+    projected_vertices = []
+    for vertex in rotated_vertices:
+        x = vertex[0] * 200 / (vertex[2] + 5) + cx
+        y = vertex[1] * 200 / (vertex[2] + 5) + cy
+        projected_vertices.append((x, y))
 
+    # Рисование граней куба
+    for edge in edges:
+        pygame.draw.line(screen, WHITE, projected_vertices[edge[0]], projected_vertices[edge[1]])
 
+    pygame.display.flip()
+    clock.tick(60)
+
+pygame.quit()
