@@ -37,34 +37,63 @@ points = [
     # [DEFAULT,CUB_SIZE,CUB_SIZE],
     # [CUB_SIZE,DEFAULT,CUB_SIZE]
 
-    [DEFAULT,DEFAULT,Z],
-    [-DEFAULT,-DEFAULT,Z],
-    [-DEFAULT,DEFAULT,Z],
-    [DEFAULT,-DEFAULT,Z],
+    [DEFAULT,DEFAULT,Z,GREEN],
+    [-DEFAULT,-DEFAULT,Z,GREEN],
+    [-DEFAULT,DEFAULT,Z,GREEN],
+    [DEFAULT,-DEFAULT,Z,GREEN],
 
-    [DEFAULT,DEFAULT,-Z],
-    [-DEFAULT,-DEFAULT,-Z],
-    [-DEFAULT,DEFAULT,-Z],
-    [DEFAULT,-DEFAULT,-Z]
+    [DEFAULT,DEFAULT,-Z,GREEN],
+    [-DEFAULT,-DEFAULT,-Z,GREEN],
+    [-DEFAULT,DEFAULT,-Z,GREEN],
+    [DEFAULT,-DEFAULT,-Z,GREEN]
 
 ]
 
+m = 100 
 
-for x in range(int(DEFAULT/100)):
-    for y in range(int(DEFAULT/100)):
-        points.append([x*100,y*100,Z])
-        points.append([-x*100,y*100,Z])
+for x in range(int(DEFAULT/m)):
+    for y in range(int(DEFAULT/m)):
+        points.append([x*m,y*m,Z,GREEN])
+        points.append([-x*m,y*m,Z,GREEN])
 
-        points.append([x*100,-y*100,Z])
-        points.append([-x*100,-y*100,Z])
+        points.append([x*m,-y*m,Z,GREEN])
+        points.append([-x*m,-y*m,Z,GREEN])
 
 ###############################################
 
-        points.append([x*100,y*100,-Z])
-        points.append([-x*100,y*100,-Z])
+        points.append([x*m,y*m,-Z,GREEN])
+        points.append([-x*m,y*m,-Z,GREEN])
 
-        points.append([x*100,-y*100,-Z])
-        points.append([-x*100,-y*100,-Z])
+        points.append([x*m,-y*m,-Z,GREEN])
+        points.append([-x*m,-y*m,-Z,GREEN])
+
+###############################################
+
+        points.append([-Z, x*m,y*m,RED])
+        points.append([-Z, -x*m,y*m,RED])
+
+        points.append([-Z, x*m,-y*m,RED])
+        points.append([-Z,-x*m,-y*m,RED])
+
+#############################################
+        points.append([Z, x*m,y*m,RED])
+        points.append([Z, -x*m,y*m,RED])
+
+        points.append([Z, x*m,-y*m,RED])
+        points.append([Z,-x*m,-y*m,RED])
+
+#############################################
+        points.append([x*m,Z,y*m,BLUE])
+        points.append([-x*m,Z,y*m,BLUE])
+
+        points.append([x*m,Z,-y*m,BLUE])
+        points.append([-x*m,Z,-y*m,BLUE])
+#############################################
+        points.append([x*m,-Z,-y*m,BLUE])
+        points.append([-x*m,-Z,-y*m,BLUE])
+
+        points.append([x*m,-Z,y*m,BLUE])
+        points.append([-x*m,-Z,y*m,BLUE])
 
 
 
@@ -170,8 +199,10 @@ while 1:
         Color = GREEN
 
         for p in points:
+            Color = p[3]
+
             p = rotate3(a,p)
-            # p = rotate2(math.pi/4,p)
+            p = rotate2(math.pi/4,p)
             # p = rotate2(a,p)
 
             fake_Z = p[2] + Z + 600
